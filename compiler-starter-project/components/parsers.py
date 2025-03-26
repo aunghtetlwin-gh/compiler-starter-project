@@ -8,7 +8,7 @@ class MyParser(Parser):
     # Get the token list from the lexer (required)
     tokens = MyLexer.tokens
     precedence = (
-        ('left', "+", MINUS),
+        ('left', PLUS, MINUS),
         ('left', TIMES, DIVIDE),
         ('right', UMINUS),
         )
@@ -16,20 +16,34 @@ class MyParser(Parser):
     def __init__(self):
         self.memory:Memory = Memory()
 
+    """
     @_('NAME ASSIGN expr')
     def statement(self, p):
         var_name = p.NAME
         value = p.expr
-        self.memory.set(variable_name=var_name,value=value, data_type=type(value))
+        self.memory.set(var_name, value, type(value))  # Fix: Corrected variable name
         # Note that I did not return anything
+        print(f"Stored: {var_name} = {value}")
 
     @_('expr')
     # S -> E
-    def statement(self, p) -> int:
+    def statement(self, p):
         return p.expr
 
+    """
+    @_('NAME ASSIGN expr', 'expr')
+    def statement(self, p):
+        if len(p) == 3:
+            var_name = p.NAME
+            value = p.expr
+            self.memory.set(var_name, value, type(value))
+            print(f"Stored: {var_name} = {value}")
+        else:
+            return p.expr
+        
+
     # The example with literals
-    @_('expr "+" expr')
+    @_('expr PLUS expr')
     # E -> E + E
     def expr(self, p):
         # You can refer to the token 2 ways
@@ -66,7 +80,7 @@ class MyParser(Parser):
 
     @_('NUMBER')
     def expr(self, p):
-        return int(p.NUMBER)
+        return Expression_number(float(p.NUMBER))
 
 
 from components.ast.statement import Expression, Expression_math, Expression_number, Operations
@@ -76,44 +90,43 @@ class ASTParser(Parser):
     # Get the token list from the lexer (required)
     tokens = MyLexer.tokens
     precedence = (
-        ('left', "+", MINUS),
-        # ('left', TIMES, DIVIDE),
+        ('left', PLUS, MINUS),
+        ('left', TIMES, DIVIDE),
         # ('right', UMINUS),
         )
 
     @_('expr')
-    def statement(self, p) -> int:
+    def statement(self, p):
         p.expr.run()
         return p.expr.value
 
-    @_('expr "+" expr')
-    def expr(self, p) -> Expression:
-        parameter1 = p.expr0
-        parameter2 = p.expr1
-        expr = Expression_math(operation=Operations.PLUS, parameter1=parameter1, parameter2=parameter2)
-        return expr
+    @_('expr PLUS expr')
+    def expr(self, p):
+        # parameter1 = p.expr0
+        # parameter2 = p.expr1
+        return  Expression_math(Operations.PLUS, p.expr0, p.expr1)
+       
     
     @_('expr MINUS expr')
     def expr(self, p) -> Expression:
-        parameter1 = p.expr0
-        parameter2 = p.expr1
-        expr = Expression_math(operation=Operations.MINUS, parameter1=parameter1, parameter2=parameter2)
-        return expr
+        # parameter1 = p.expr0
+        # parameter2 = p.expr1
+        return  Expression_math(Operations.MINUS, p.expr0, p.expr1)
 
     @_('NUMBER')
-    def expr(self, p) -> Expression:
-        return Expression_number(number=p.NUMBER)
+    def expr(self, p):
+        return Expression_number(float(p.NUMBER))
         
         
 
         
 if __name__ == "__main__":
     lexer = MyLexer()
-    # parser = MyParser()
-    text = "9 + 2 + 3"
+    parser = MyParser()
+    test_expression = "9 + 2 * (3 - 1)"
     memory = Memory()
-    parser = ASTParser()
+    # parser = ASTParser()
     # text = "1 + 2 + 3"
-    result = parser.parse(lexer.tokenize(text))
-    print(result)
+    result = parser.parse(lexer.tokenize(test_expression))
+    print("Result:", result)
     # print(memory)

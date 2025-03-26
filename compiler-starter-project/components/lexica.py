@@ -15,14 +15,14 @@ class MyLexer(Lexer):
     # set `tokens` so it can be used in the parser.
     # This must be here and all Capitalized. 
     # Please, ignore IDE warning.
-    tokens = { ASSIGN, NAME, NUMBER, MINUS, DIVIDE, TIMES, LPAREN, RPAREN}
+    tokens = { ASSIGN, NAME, NUMBER, PLUS, MINUS, DIVIDE, TIMES, LPAREN, RPAREN}
     
     # https://sly.readthedocs.io/en/latest/sly.html#literal-characters
-    literals = { '+' }
+    literals = { '=' }
     
     ### matching rule ###
     # The matching work from top to bottom
-    # At least, all toekns must be defined here
+    # At least, all tokens must be defined here
 
     # Ignore spaces and tabs 
     ignore = ' \t'
@@ -30,17 +30,18 @@ class MyLexer(Lexer):
     ### EX1: simply define with regEX ###
     NAME = r'[a-zA-Z_][a-zA-Z0-9_]*'
     ### EX2: Define as a function ###
-    @_(r'\d+')
+
+    @_(r'\d+(\.\d+)?')  # Supports both integers and floats
     def NUMBER(self, token):
         # Note that this function set parse token.value to integer
-        token.value = int(token.value)
+        token.value = float(token.value)
         # Extra print for debug
         print(f"====This print from NUMBER function: {token.type=} {token.value=} {type(token.value)=}")
         return token
 
     # Try uncomment this and run to see the differences between `token` and `literal`
-    ASSIGN  = r'\='
-    # PLUS    = r'\+'
+    ASSIGN  = r'='
+    PLUS    = r'\+'
     MINUS   = r'-'
     TIMES   = r'\*'
     DIVIDE  = r'/'
@@ -54,14 +55,16 @@ class MyLexer(Lexer):
         self.lineno += t.value.count('\n')
 
     def error(self, t):
-        self.index += 1
+        # self.index += 1
+        self.index = t.index + 1
         print(f"ERROR: Illegal character '{t.value[0]}' at line {self.lineno}")
 
 if __name__ == '__main__':
     # Write a simple test that only run when you execute this file
-    string_input:str = "x1 + 1as! * ()"
+    # string_input:str = "x1 + 1as! * ()"
+    input_string = "x1 = 3.5 + 2.5 * (4 - 1)"
     lex:Lexer = MyLexer()
     # assign type to `token`
     token: sly.lex.Token
-    for token in lex.tokenize(string_input):
+    for token in lex.tokenize(input_string):
         print(token)
