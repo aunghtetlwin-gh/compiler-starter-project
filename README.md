@@ -1,3 +1,11 @@
+#  PLC Calculator 
+- **By : Aung Htet Lwin st125773**
+- This project is developed to fulfill the requirements of the AT70.07 Programming Languages and Compilers course at the Asian Institute of Technology (AIT) for the January 2025 semester.
+
+<p align="left">
+  <img src="image.png" width="453" height="640">
+</p>
+
 # Compiler Starter Project
 
 - [Compiler Starter Project](#compiler-starter-project)
@@ -15,9 +23,6 @@
     - [`main.py` and `components/main.ui`](#mainpy-and-componentsmainui)
   - [Design a GUI](#design-a-gui)
 
-
-This is the starter project for the Programming Language and Compiler course @ AIT. 
-Since 2024, we use `Python`.
 
 ## Dependencies
 - Python version 3.9.18
