@@ -192,23 +192,40 @@ class MainWindow(QMainWindow):
     #     # print(f"Result Value: {result}")
     #     # print(memory)
 
+    # def push_equal(self):
+    #     lexer = MyLexer()
+    #     parser = MyParser()
+    #     input_text = self.input_text.text().strip()
+        
+    #     if not input_text:
+    #         return
+        
+    #     try:
+    #         infix = parser.convert_to_infix(input_text)
+    #         result = parser.parse(lexer.tokenize(input_text))
+    #         self.output_lcd.display(result)
+    #         self.output_infix.setText(infix)
+    #     except Exception as e:
+    #         self.output_infix.setText(f"Error: {str(e)}")
+    #         self.output_lcd.display(0)
+        
     def push_equal(self):
         lexer = MyLexer()
         parser = MyParser()
-        input_text = self.input_text.text().strip()
         
-        if not input_text:
-            return
-        
+        input_text = self.input_text.text()
+
         try:
-            infix = parser.convert_to_infix(input_text)
-            result = parser.parse(lexer.tokenize(input_text))
-            self.output_lcd.display(result)
-            self.output_infix.setText(infix)
+            tokens = lexer.tokenize(input_text)
+            infix, result = parser.convert_to_infix(input_text)  # Get infix + result
+
+            self.output_infix.setText(infix)  # Display infix notation
+            self.output_lcd.display(result)   # Display calculated result
+
         except Exception as e:
-            self.output_infix.setText(f"Error: {str(e)}")
+            self.output_infix.setText("Error")
             self.output_lcd.display(0)
-        
+            print(f"Error: {e}")
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

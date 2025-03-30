@@ -139,24 +139,63 @@ class MyParser(Parser):
 
     #     return stack[0]  # The final infix expression
 
-    def convert_to_infix(self, expression):
-        tokens = expression.strip().split()
-        stack = []
-        operators = {'+', '-', '*', '/'}
+    # def convert_to_infix(self, expression):
+    #     tokens = expression.strip().split()
+    #     stack = []
+    #     operators = {'+', '-', '*', '/'}
 
-        for token in reversed(tokens):
-            if token.isdigit():
+    #     for token in reversed(tokens):
+    #         if token.isdigit():
+    #             stack.append(token)
+    #         elif token in operators:
+    #             if len(stack) < 2:
+    #                 raise ValueError(f"Invalid expression: {expression}")
+    #             op1 = stack.pop()
+    #             op2 = stack.pop()
+    #             stack.append(f"({op1} {token} {op2})")
+    #         else:
+    #             raise ValueError(f"Unexpected token: {token}")
+
+    #     if len(stack) != 1:
+    #         raise ValueError(f"Malformed expression: {expression}")
+
+    #     return stack[0]
+
+    def convert_to_infix(self, expression):
+        """ Convert prefix notation to infix and evaluate it """
+        
+        tokens = expression.strip().split()
+
+        # Ensure valid prefix notation
+        if not tokens[0] in {'+', '-', '*', '/'}:
+            raise ValueError(f"❌ Prefix expression must start with an operator: {expression}")
+
+        tokens.reverse()  # Reverse for processing
+        stack = []
+
+        for token in tokens:
+            if token.isdigit():  
                 stack.append(token)
-            elif token in operators:
+            elif token in {'+', '-', '*', '/'}:
                 if len(stack) < 2:
-                    raise ValueError(f"Invalid expression: {expression}")
+                    raise ValueError(f"❌ Invalid prefix expression: {expression}")
+
                 op1 = stack.pop()
                 op2 = stack.pop()
-                stack.append(f"({op1} {token} {op2})")
+                new_expr = f"({op1} {token} {op2})"
+                stack.append(new_expr)
             else:
-                raise ValueError(f"Unexpected token: {token}")
+                raise ValueError(f"❌ Invalid token: {token}")
 
         if len(stack) != 1:
-            raise ValueError(f"Malformed expression: {expression}")
+            raise ValueError(f"❌ Invalid expression: {expression}")
 
-        return stack[0]
+        infix_expr = stack[0]
+
+        # ✅ Evaluate the infix expression safely
+        try:
+            result = eval(infix_expr, {"__builtins__": None}, {})
+        except Exception as e:
+            raise ValueError(f"Evaluation Error: {e}")
+
+        return infix_expr, result  # Return both infix string and computed result
