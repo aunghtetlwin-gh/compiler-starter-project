@@ -68,6 +68,33 @@ class MainWindow(QMainWindow):
                 padding: 6px;
                 font-size: 18px;
             }
+            
+            /* Clear Button (C) - Red */
+            #button_clear {
+                background-color: #BF616A;
+            }
+
+            #button_clear:hover {
+                background-color: #D08770;
+            }
+
+            /* Plus (+) and Multiply (*) Buttons - Orange */
+            #button_plus, #button_star {
+                background-color: #D08770;
+            }
+
+            #button_plus:hover, #button_star:hover {
+                background-color: #EBCB8B;
+            }
+
+            /* Equals (=) Button - Green */
+            #button_equal {
+                background-color: #A3BE8C;
+            }
+
+            #button_equal:hover {
+                background-color: #B5CEA8;
+            }
 
             QLCDNumber {
                 background-color: black;
