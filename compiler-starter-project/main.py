@@ -101,12 +101,7 @@ class MainWindow(QMainWindow):
     
     def push(self, text:str):
         current_text:str = self.input_text.text()
-
-        # Only add spaces for operators, not numbers
-        if text in ["+", "-", "*", "/"]:
-            self.input_text.setText(f"{current_text} {text} ")  # Space around operators
-        else:
-            self.input_text.setText(f"{current_text}{text}")    # No space for numbers
+        self.input_text.setText(f"{current_text} {text}")
   
 
     def clear(self):
@@ -116,77 +111,104 @@ class MainWindow(QMainWindow):
         self.output_infix.setText("")       # Clear infix output
         # self.output_postfix.setText("")     # Clear postfix output
     
+    # def push_equal(self):
+    #     lexer = MyLexer()
+    #     parser = MyParser()
+    #     memory = Memory()
+
+    #     input_text = self.input_text.text().strip()
+    #     tokens = lexer.tokenize(input_text)
+
+    #     if not tokens:
+    #         self.output_infix.setText("Invalid Input")
+    #         self.output_lcd.display(0)
+    #         return
+
+            
+    #     # tokens=input_text.split()
+    #     # tokens = iter(lexer.tokenize(input_text))
+
+    #     # if len(tokens) < 3:
+    #     #     print(f"❌ ERROR: Prefix expression is too short: {input_text}")
+    #     #     self.output_infix.setText("Invalid Prefix Input")
+    #     #     # self.output_postfix.setText("")
+    #     #     self.output_lcd.display("0")
+    #     #     return
+
+    #     # print(f" Checking input prefix: {tokens}")
+
+    #     try:
+            
+    #         print(f"Tokens: {tokens}")
+    #         result = parser.parse(tokens)
+
+    #         # result = parser.parse(tokens)
+            
+    #         # Convert prefix to infix and postfix
+    #         infix_expr = parser.convert_to_infix(input_text)
+    #         # postfix_expr = parser.prefix_to_postfix(input_text)
+
+    #         # Debugging
+    #         print(f"✅ Prefix Input: {input_text}")
+    #         print(f"✅ Converted Infix: {infix_expr}")
+    #         # print(f"✅ Converted Postfix: {postfix_expr}")
+
+    #         # Evaluate the infix expression
+            
+
+    #         print(f"✅ Result: {result}\n")
+
+    #         # Display in UI
+    #         self.output_lcd.display(result)       # Show the final answer
+    #         self.output_infix.setText(infix_expr)   # Show infix expression
+    #         # self.output_postfix.setText(postfix_expr)  # Show postfix expression
+
+    #         print(memory)  # Debugging memory
+
+    #     except Exception  as e:
+    #         self.output_lcd.display(0)
+    #         self.output_infix.setText("Invalid Input")
+    #         print(f"Error: {e}")
+
+
+    #     # tokens = lexer.tokenize(input_text)  # Convert input into tokens
+    #     # result = parser.parse(tokens)  # Get result only
+
+    #     # # self.output_lcd.display(result.value)  # Show the result in LCD
+    #     # # self.output_infix.setText(str(result))  # Show the converted infix expression
+
+    #     #  # Ensure result is properly formatted before displaying
+    #     # if hasattr(result, 'value'):
+    #     #     self.output_lcd.display(result.value)
+    #     #     self.output_infix.setText(str(result))
+    #     # else:
+    #     #     self.output_lcd.display(result)
+    #     #     self.output_infix.setText(str(result))
+
+    #     # Debugging
+    #     # print(type(result))
+    #     # # print("Infix Expression:", (str(result)))
+    #     # print(f"Result Type: {type(result)}")
+    #     # print(f"Result Value: {result}")
+    #     # print(memory)
+
     def push_equal(self):
         lexer = MyLexer()
         parser = MyParser()
-        memory = Memory()
-
         input_text = self.input_text.text().strip()
-        tokens=input_text.split()
-        # tokens = iter(lexer.tokenize(input_text))
-
-        if len(tokens) < 3:
-            print(f"❌ ERROR: Prefix expression is too short: {input_text}")
-            self.output_infix.setText("Invalid Prefix Input")
-            # self.output_postfix.setText("")
-            self.output_lcd.display("0")
+        
+        if not input_text:
             return
-
-        print(f" Checking input prefix: {tokens}")
-
+        
         try:
-            
-            print(f"Tokens: {tokens}")
-
-            # result = parser.parse(tokens)
-            
-            # Convert prefix to infix and postfix
-            infix_expr = parser.convert_to_infix(input_text)
-            # postfix_expr = parser.prefix_to_postfix(input_text)
-
-            # Debugging
-            print(f"✅ Prefix Input: {input_text}")
-            print(f"✅ Converted Infix: {infix_expr}")
-            # print(f"✅ Converted Postfix: {postfix_expr}")
-
-            # Evaluate the infix expression
-            result = parser.parse(iter(tokens))
-
-            print(f"✅ Result: {result}\n")
-
-            # Display in UI
-            self.output_lcd.display(result)       # Show the final answer
-            self.output_infix.setText(infix_expr)   # Show infix expression
-            # self.output_postfix.setText(postfix_expr)  # Show postfix expression
-
-            print(memory)  # Debugging memory
-
-        except Exception  as e:
+            infix = parser.convert_to_infix(input_text)
+            result = parser.parse(lexer.tokenize(input_text))
+            self.output_lcd.display(result)
+            self.output_infix.setText(infix)
+        except Exception as e:
+            self.output_infix.setText(f"Error: {str(e)}")
             self.output_lcd.display(0)
-            self.output_infix.setText("Invalid Input")
-            print(f"Error: {e}")
-
-
-        # tokens = lexer.tokenize(input_text)  # Convert input into tokens
-        # result = parser.parse(tokens)  # Get result only
-
-        # # self.output_lcd.display(result.value)  # Show the result in LCD
-        # # self.output_infix.setText(str(result))  # Show the converted infix expression
-
-        #  # Ensure result is properly formatted before displaying
-        # if hasattr(result, 'value'):
-        #     self.output_lcd.display(result.value)
-        #     self.output_infix.setText(str(result))
-        # else:
-        #     self.output_lcd.display(result)
-        #     self.output_infix.setText(str(result))
-
-        # Debugging
-        # print(type(result))
-        # # print("Infix Expression:", (str(result)))
-        # print(f"Result Type: {type(result)}")
-        # print(f"Result Value: {result}")
-        # print(memory)
+        
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
