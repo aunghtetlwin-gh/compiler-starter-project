@@ -6,6 +6,18 @@
   <img src="image.png" width="453" height="640">
 </p>
 
+###  Pre-requisites 
+- Python 3.9.18
+- PDM for project management 
+- PyQt6 for GUI 
+
+###  Run on Local Machine
+1. Clone the project to your local machine.
+2. Go to project folder and run `pdm install`.
+3. To launch `Qt Designer` run:
+    - `pdm shell pyqt6-tools designer`
+    - `pdm run ui` or `pyqt6-tools designer main.ui`
+
 # Compiler Starter Project
 
 - [Compiler Starter Project](#compiler-starter-project)
