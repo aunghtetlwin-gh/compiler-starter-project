@@ -1,5 +1,6 @@
 #  PLC Calculator 
 - **By : Aung Htet Lwin st125773**
+- URL to my repository (https://github.com/aunghtetlwin-gh/compiler-starter-project.git)
 - This project is developed to fulfill the requirements of the AT70.07 Programming Languages and Compilers course at the Asian Institute of Technology (AIT) for the January 2025 semester.
 
 <p align="left">
@@ -14,7 +15,8 @@
 ###  Run on Local Machine
 1. Clone the project to your local machine.
 2. Go to project folder and run `pdm install`.
-3. To launch `Qt Designer` run:
+3. Type this command to run the project `pdm run app`.
+4. To launch `Qt Designer` run:
     - `pdm shell pyqt6-tools designer`
     - `pdm run ui` or `pyqt6-tools designer main.ui`
 
